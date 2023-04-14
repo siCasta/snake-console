@@ -1,0 +1,9 @@
+{
+    "tasks": {
+        "dev": "deno run --watch main.ts"
+    },
+    "imports": {
+        "tty": "https://deno.land/x/cliffy@v0.25.7/ansi/tty.ts",
+        "keypress": "https://deno.land/x/cliffy@v0.25.7/keypress/mod.ts"
+    }
+}
