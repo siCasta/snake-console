@@ -1,5 +1,5 @@
-import { tty } from 'tty'
-import { keypress } from 'keypress'
+import { tty } from 'https://deno.land/x/cliffy@v0.25.7/ansi/tty.ts'
+import { keypress } from 'https://deno.land/x/cliffy@v0.25.7/keypress/mod.ts'
 import { cells, columns, directions, rows } from './config.ts'
 import { Position } from './types/general.d.ts'
 import { sleep } from './funcs.ts'
