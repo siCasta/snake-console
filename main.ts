@@ -1,5 +1,5 @@
-import { tty } from 'https://deno.land/x/cliffy@v0.25.7/ansi/tty.ts'
-import { keypress } from 'https://deno.land/x/cliffy@v0.25.7/keypress/mod.ts'
+import { tty } from 'tty'
+import { keypress } from 'keypress'
 import { cells, columns, directions, rows } from './config.ts'
 import { Position } from './types/general.d.ts'
 import { sleep } from './funcs.ts'
@@ -19,6 +19,7 @@ class Game {
     snakeBody: Position[]
     direction
     eaten
+    speed
 
     constructor(options: GameOptions) {
         this.width = options.width
@@ -32,6 +33,7 @@ class Game {
         this.applePos = this.placeApple()
         this.direction = directions.right
         this.eaten = false
+        this.speed = 0.1
     }
 
     appleCollision() {
@@ -40,6 +42,7 @@ class Game {
             this.applePos[1] === this.snakeBody[0][1]
         ) {
             this.score++
+            this.speed *= 0.99
             this.changeScoreText()
             this.applePos = this.placeApple()
             this.eaten = true
@@ -170,17 +173,19 @@ class Game {
             if (cell[0] === columns - 1) this.screen.push('\n')
         }
 
-        console.log(this.screen.join(''))
+        console.log(this.screen.join(''), 'Exit ctrl + c')
     }
 
-    gameOver() {
+    async gameOver() {
         if (
             this.isBorder(this.snakeBody[0]) ||
             this.bodyCollision(this.snakeBody[0])
         ) {
             console.clear()
             console.log(`Your score was ${this.score}`)
-            Deno.exit()
+            console.log('Exit ctrl + c')
+            for await (const exit of keypress())
+                if (exit.ctrlKey && exit.key === 'c') Deno.exit()
         }
     }
 
@@ -188,12 +193,12 @@ class Game {
         this.setInput()
 
         while (true) {
-            await sleep(0.08)
-            console.clear()
             this.updateSnake()
             this.appleCollision()
             this.printScreen()
-            this.gameOver()
+            await sleep(this.speed)
+            console.clear()
+            await this.gameOver()
         }
     }
 }
