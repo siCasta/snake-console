@@ -1,7 +1,7 @@
 import { tty } from 'tty'
 import { keypress } from 'keypress'
 import { cells, columns, directions, rows } from './config.ts'
-import { Position } from './types/general.d.ts'
+import { Cell } from './types/general.d.ts'
 import { sleep } from './funcs.ts'
 
 interface GameOptions {
@@ -15,8 +15,8 @@ class Game {
     screen: string[]
     score
     scoreText
-    applePos: Position
-    snakeBody: Position[]
+    applePos: Cell
+    snakeBody: Cell[]
     direction
     eaten
     speed
@@ -85,7 +85,7 @@ class Game {
             this.snakeBody[0][0] + this.direction[0],
             this.snakeBody[0][1] + this.direction[1]
         ]
-        this.snakeBody.unshift(newHead as Position)
+        this.snakeBody.unshift(newHead as Cell)
 
         if (!this.eaten) this.snakeBody.pop()
 
@@ -96,7 +96,7 @@ class Game {
         let pos = [
             Math.floor(Math.random() * (columns - 2)) + 1,
             Math.floor(Math.random() * (rows - 2)) + 1
-        ] as Position
+        ] as Cell
 
         while (this.isSnake(pos)) {
             pos = [
@@ -107,7 +107,7 @@ class Game {
         return pos
     }
 
-    isBorder(cell: Position) {
+    isBorder(cell: Cell) {
         return (
             cell[0] === 0 ||
             cell[0] === columns - 1 ||
@@ -120,7 +120,7 @@ class Game {
         this.screen = []
     }
 
-    isScoreText(cell: Position) {
+    isScoreText(cell: Cell) {
         return (
             cell[0] >= 3 && cell[0] < 3 + this.scoreText.length && cell[1] === 0
         )
@@ -130,7 +130,7 @@ class Game {
         screen.push(this.scoreText[n - 3])
     }
 
-    isSnake(cell: Position) {
+    isSnake(cell: Cell) {
         // return this.snakeBody.join(' ').split(' ').includes(cell.join(','))
         for (const snakePart of this.snakeBody) {
             if (snakePart[0] === cell[0] && snakePart[1] === cell[1])
@@ -138,7 +138,7 @@ class Game {
         }
     }
 
-    bodyCollision(head: Position) {
+    bodyCollision(head: Cell) {
         const newSnakeBody = this.snakeBody.filter((_, i) => i !== 0)
 
         if (newSnakeBody.length > 0) {
@@ -153,7 +153,7 @@ class Game {
         this.clearScreen()
         tty.cursorHide()
 
-        for (const cell of cells) {
+        for (const cell of cells.getMatrix) {
             if (this.isScoreText(cell)) this.setScoreText(this.screen, cell[0])
             else if (this.isBorder(cell)) this.screen.push('█')
             else if (this.isSnake(cell)) {

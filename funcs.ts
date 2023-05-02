@@ -1,10 +1,11 @@
-import { Position } from './types/general.d.ts'
+import { Matrix } from './classes/Matrix.ts'
+import { Cell } from './types/general.d.ts'
 
 export function createCells(width: number, height: number) {
-    const cells: Position[] = []
+    const cells = new Matrix<Cell>()
 
     for (let row = 0; row < height; row++) {
-        for (let col = 0; col < width; col++) cells.push([col, row])
+        for (let col = 0; col < width; col++) cells.addItem([col, row])
     }
 
     return cells
