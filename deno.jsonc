@@ -4,6 +4,7 @@
     },
     "imports": {
         "tty": "https://deno.land/x/cliffy@v0.25.7/ansi/tty.ts",
-        "keypress": "https://deno.land/x/cliffy@v0.25.7/keypress/mod.ts"
+        "keypress": "https://deno.land/x/cliffy@v0.25.7/keypress/mod.ts",
+        "colors": "https://deno.land/std@0.185.0/fmt/colors.ts"
     }
 }
